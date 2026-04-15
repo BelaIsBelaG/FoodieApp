@@ -50,12 +50,12 @@ export default function ProfileScreen({ route }) {
     return (
         <View style={styles.container}>
 
-            {/* CONTENIDO ORIGINAL (NO SE MODIFICA) */}
+            {/* INFORMACIÓN DEL PERFIL DEL USUARIO */}
             <Text style={styles.title}>Perfil</Text>
             <Text style={styles.label}>Última comida vista:</Text>
             <Text style={styles.food}>{food.name}</Text>
 
-            {/* BOTÓN NUEVO */}
+            {/* BOTÓN PARA ABRIR LA CÁMARA */}
             <Pressable
                 style={styles.actionButton}
                 onPress={() => setCameraVisible(true)}
@@ -63,7 +63,7 @@ export default function ProfileScreen({ route }) {
                 <Text style={styles.actionButtonText}>Abrir cámara</Text>
             </Pressable>
 
-            {/* MODAL DE CÁMARA */}
+            {/* PERMISOS DE LA CÁMARA CÁMARA */}
             <Modal visible={cameraVisible} animationType="slide">
 
                 <View style={styles.cameraContainer}>
