@@ -1,6 +1,6 @@
 import React from "react"
 import { View, Text, StyleSheet } from "react-native"
-import { Button } from "react-native-web"
+import { Button } from "react-native"
 
 export default function ProfileScreen({ route }) {
 

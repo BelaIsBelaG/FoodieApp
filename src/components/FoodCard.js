@@ -1,26 +1,69 @@
 import React from "react"
-import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native"
+import {
+    View,
+    Text,
+    Image,
+    StyleSheet,
+    TouchableOpacity,
+
+    ///Agregado: importamos Animated para animación al presionar
+    Animated
+
+} from "react-native"
+
+///Agregado: hook para manejar animaciones
+import { useRef } from "react"
 
 function FoodCard({ item, navigation }) {
 
+    ///Agregado: valor inicial para animación de escala
+    const scale = useRef(new Animated.Value(1)).current;
+
+    ///Agregado: animación al presionar la tarjeta
+    const handlePress = () => {
+
+        Animated.sequence([
+            Animated.timing(scale, {
+                toValue: 0.95,
+                duration: 100,
+                useNativeDriver: true
+            }),
+            Animated.timing(scale, {
+                toValue: 1,
+                duration: 100,
+                useNativeDriver: true
+            })
+        ]).start();
+
+        ///Se mantiene la navegación original
+        navigation.navigate("Details", { food: item });
+    };
+
     return (
 
-        <TouchableOpacity
-            style={styles.card}
-            onPress={() => navigation.navigate("Details", { food: item })}
-        >
+        ///Agregado: envolvemos la tarjeta en Animated.View para aplicar la animación
+        <Animated.View style={{ transform: [{ scale }] }}>
 
-            <Image source={{ uri: item.image }} style={styles.image} />
+            <TouchableOpacity
+                style={styles.card}
 
-            <View style={styles.info}>
+                ///Agregado: usamos la función con animación
+                onPress={handlePress}
+            >
 
-                <Text style={styles.name}>{item.name}</Text>
+                <Image source={{ uri: item.image }} style={styles.image} />
 
-                <Text style={styles.price}>${item.price}</Text>
+                <View style={styles.info}>
 
-            </View>
+                    <Text style={styles.name}>{item.name}</Text>
 
-        </TouchableOpacity>
+                    <Text style={styles.price}>${item.price}</Text>
+
+                </View>
+
+            </TouchableOpacity>
+
+        </Animated.View>
 
     )
 }
@@ -29,32 +72,38 @@ export default React.memo(FoodCard)
 
 const styles = StyleSheet.create({
 
+    ///Mejorado: tarjeta más moderna (UX/UI)
     card: {
         flex: 1,
-        backgroundColor: "#fff",
+        backgroundColor: "#1e293b", ///cambio de color (modo oscuro)
         margin: 8,
-        borderRadius: 12,
+        borderRadius: 16, ///más redondeado
         overflow: "hidden",
-        elevation: 3
+        elevation: 4 ///mejor sombra
     },
 
+    ///Mejorado: imagen más estética
     image: {
         width: "100%",
         height: 140
     },
 
     info: {
-        padding: 10
+        padding: 12 ///más espacio interno
     },
 
+    ///Mejorado: texto más legible
     name: {
         fontSize: 16,
-        fontWeight: "bold"
+        fontWeight: "bold",
+        color: "#fff"
     },
 
+    ///Mejorado: color más llamativo para precio
     price: {
         marginTop: 4,
-        color: "#27ae60"
+        color: "#22c55e",
+        fontWeight: "600"
     }
 
 })

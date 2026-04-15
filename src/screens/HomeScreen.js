@@ -5,8 +5,15 @@ import {
     FlatList,
     StyleSheet,
     TextInput,
-    useWindowDimensions
+    useWindowDimensions,
+
+    ///Agregado: importamos Animated para animaciones
+    Animated
+
 } from "react-native";
+
+///Agregado: hooks necesarios para animaciones
+import { useRef, useEffect } from "react";
 
 import { foods } from "../utils/foods";
 import FoodCard from "../components/FoodCard";
@@ -18,6 +25,26 @@ export default function HomeScreen({ navigation }) {
 
     const [search, setSearch] = useState("");
     const [category, setCategory] = useState("Todo");
+
+    ///Mejorado: aumentamos el desplazamiento para que se note más la animación
+    const fade = useRef(new Animated.Value(0)).current;
+    const slide = useRef(new Animated.Value(150)).current; ///antes era 50
+
+    ///Mejorado: animación más lenta y visible
+    useEffect(() => {
+        Animated.parallel([
+            Animated.timing(fade, {
+                toValue: 1,
+                duration: 1200, ///antes 800
+                useNativeDriver: true
+            }),
+            Animated.timing(slide, {
+                toValue: 0,
+                duration: 1200, ///antes 800
+                useNativeDriver: true
+            })
+        ]).start();
+    }, []);
 
     const numColumns = width > 600 ? 2 : 1;
 
@@ -42,7 +69,15 @@ export default function HomeScreen({ navigation }) {
     }, [search, category]);
 
     return (
-        <View style={styles.container}>
+
+        ///Agregado: Animated.View para aplicar animación de entrada
+        <Animated.View style={[
+            styles.container,
+            {
+                opacity: fade,
+                transform: [{ translateY: slide }]
+            }
+        ]}>
 
             <Text style={styles.title}>Food App</Text>
 
@@ -60,6 +95,10 @@ export default function HomeScreen({ navigation }) {
                 showsHorizontalScrollIndicator={false}
                 keyExtractor={(item) => item}
                 style={styles.categories}
+
+                ///Agregado: mejora distribución de botones (UX)
+                contentContainerStyle={{ paddingHorizontal: 5 }}
+
                 renderItem={({ item }) => (
                     <CategoryButton
                         title={item}
@@ -81,39 +120,46 @@ export default function HomeScreen({ navigation }) {
                 )}
             />
 
-        </View>
+        </Animated.View>
     );
 }
 
 const styles = StyleSheet.create({
 
+    ///Mejorado: fondo oscuro para mejor contraste visual
     container: {
         flex: 1,
         padding: 16,
-        backgroundColor: "#f4f4f4"
+        backgroundColor: "#0f172a"
     },
 
+    ///Mejorado: jerarquía visual (título más grande y claro)
     title: {
-        fontSize: 26,
+        fontSize: 28,
         fontWeight: "bold",
-        marginBottom: 10
+        marginBottom: 10,
+        color: "#fff"
     },
 
+    ///Mejorado: input más visible y moderno
     search: {
         backgroundColor: "#fff",
         padding: 12,
-        borderRadius: 10,
+        borderRadius: 12,
         marginBottom: 15
     },
 
+    ///Mejorado: mejor separación visual
     categories: {
-        marginBottom: 10
+        marginBottom: 15
     },
 
+    ///Mejorado: subtítulo más claro y legible
     section: {
-        fontSize: 18,
+        fontSize: 20,
         fontWeight: "600",
-        marginBottom: 10
+        marginBottom: 10,
+        color: "#e2e8f0"
     }
 
 });
