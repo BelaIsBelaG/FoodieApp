@@ -18,6 +18,7 @@ import { useRef, useEffect } from "react";
 import { foods } from "../utils/foods";
 import FoodCard from "../components/FoodCard";
 import CategoryButton from "../components/CategoryButton";
+import AIChatWidget from "../components/AIChatWidget";
 
 export default function HomeScreen({ navigation }) {
 
@@ -119,7 +120,7 @@ export default function HomeScreen({ navigation }) {
                     <FoodCard item={item} navigation={navigation} />
                 )}
             />
-
+            <AIChatWidget />
         </Animated.View>
     );
 }
