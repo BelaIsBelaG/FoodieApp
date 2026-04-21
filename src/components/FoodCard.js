@@ -42,7 +42,13 @@ function FoodCard({ item, navigation }) {
     return (
 
         ///Agregado: envolvemos la tarjeta en Animated.View para aplicar la animación
-        <Animated.View style={{ transform: [{ scale }] }}>
+        <Animated.View
+            style={{
+                flex: 1,
+                marginHorizontal: 4,
+                transform: [{ scale }]
+            }}
+        >
 
             <TouchableOpacity
                 style={styles.card}
@@ -76,7 +82,6 @@ const styles = StyleSheet.create({
     card: {
         flex: 1,
         backgroundColor: "#1e293b", ///cambio de color (modo oscuro)
-        margin: 8,
         borderRadius: 16, ///más redondeado
         overflow: "hidden",
         elevation: 4 ///mejor sombra
