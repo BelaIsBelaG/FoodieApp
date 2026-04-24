@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState, useContext } from "react"
 import {
     View,
     Text,
@@ -13,12 +13,40 @@ import {
 
 } from "react-native"
 
+//Agregado: importamos iconos para carrito y favoritos
+import { Ionicons } from "@expo/vector-icons"
+
+//Agregado: importamos el contexto para favoritos y carrito
+import { FoodContext } from "../context/FoodContext"
+
 //Importamos los temas segun android o ios
 import colors from "../styles/theme";
 
 export default function DetailsScreen({ route, navigation }) {
 
-    const { food } = route.params
+    //Recibimos food y user desde route.params
+    const { food, user } = route.params
+
+    ///Agregado: accedemos a las funciones del contexto
+    ///Para guardar favoritos y carrito globalmente
+    const { addToFavorites, addToCart } = useContext(FoodContext)
+
+    ///Agregado: estado para controlar la cantidad de productos
+    ///La cantidad inicia en 1 y nunca puede bajar de 1
+    const [quantity, setQuantity] = useState(1)
+
+    ///Agregado: función para aumentar cantidad
+    const increaseQuantity = () => {
+        setQuantity(quantity + 1)
+    }
+
+    ///Agregado: función para disminuir cantidad
+    ///Solo disminuye si la cantidad es mayor a 1
+    const decreaseQuantity = () => {
+        if (quantity > 1) {
+            setQuantity(quantity - 1)
+        }
+    }
 
     return (
 
@@ -29,13 +57,100 @@ export default function DetailsScreen({ route, navigation }) {
 
             <Image source={{ uri: food.image }} style={styles.image} />
 
-            <Text style={styles.title}>{food.name}</Text>
+            {/* 
+            Agregado: contenedor superior para título e iconos
+            Ahora los iconos aparecen junto al nombre del producto
+            */}
+            <View style={styles.headerContainer}>
+
+                <Text style={styles.title}>{food.name}</Text>
+
+                {/* 
+                Agregado: icono de favoritos
+                Ahora se representa con corazón visual
+                */}
+                <TouchableOpacity
+                    style={styles.iconButton}
+                    onPress={() => {
+                        addToFavorites(food)
+
+                        Alert.alert(
+                            "Favoritos",
+                            `${food.name} fue agregado a favoritos`
+                        )
+                    }}
+                >
+                    <Ionicons
+                        name="heart"
+                        size={26}
+                        color="white"
+                    />
+                </TouchableOpacity>
+
+                {/* 
+                Agregado: icono de carrito
+                Ahora guarda la cantidad seleccionada
+                */}
+                <TouchableOpacity
+                    style={styles.iconButton}
+                    onPress={() => {
+                        addToCart(food, quantity)
+
+                        Alert.alert(
+                            "Carrito",
+                            `${quantity} ${food.name} agregado(s) al carrito`
+                        )
+                    }}
+                >
+                    <Ionicons
+                        name="cart"
+                        size={26}
+                        color="white"
+                    />
+                </TouchableOpacity>
+
+            </View>
 
             <Text style={styles.price}>${food.price}</Text>
 
             <Text style={styles.description}>
                 {food.description}
             </Text>
+
+            {/* 
+            Agregado: selector de cantidad de productos
+            Incluye botón -, cantidad actual y botón +
+            La cantidad nunca puede ser menor a 1
+            */}
+            <View style={styles.quantitySection}>
+
+                <Text style={styles.quantityTitle}>
+                    Cantidad
+                </Text>
+
+                <View style={styles.quantityContainer}>
+
+                    <TouchableOpacity
+                        style={styles.quantityButton}
+                        onPress={decreaseQuantity}
+                    >
+                        <Text style={styles.quantityButtonText}>−</Text>
+                    </TouchableOpacity>
+
+                    <Text style={styles.quantityText}>
+                        {quantity}
+                    </Text>
+
+                    <TouchableOpacity
+                        style={styles.quantityButton}
+                        onPress={increaseQuantity}
+                    >
+                        <Text style={styles.quantityButtonText}>+</Text>
+                    </TouchableOpacity>
+
+                </View>
+
+            </View>
 
             {/* 
             Agregado: sección para mostrar los ingredientes
@@ -62,42 +177,6 @@ export default function DetailsScreen({ route, navigation }) {
             )}
 
             {/* 
-            Agregado: botones para favoritos y carrito
-            Permite guardar productos para después o pedirlos en el momento
-            */}
-            <View style={styles.actionsContainer}>
-
-                <TouchableOpacity
-                    style={styles.favoriteButton}
-                    onPress={() =>
-                        Alert.alert(
-                            "Favoritos",
-                            `${food.name} fue agregado a favoritos`
-                        )
-                    }
-                >
-                    <Text style={styles.buttonText}>
-                        Agregar a favoritos
-                    </Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                    style={styles.cartButton}
-                    onPress={() =>
-                        Alert.alert(
-                            "Carrito",
-                            `${food.name} fue agregado al carrito`
-                        )
-                    }
-                >
-                    <Text style={styles.buttonText}>
-                        Agregar al carrito
-                    </Text>
-                </TouchableOpacity>
-
-            </View>
-
-            {/* 
             Agregado: botón con feedback (Alert)
             Ahora el usuario recibe confirmación de la acción
             */}
@@ -105,7 +184,10 @@ export default function DetailsScreen({ route, navigation }) {
                 title="Ir al perfil"
                 onPress={() => {
                     Alert.alert("Acción realizada", "Redirigiendo al perfil 👤");
-                    navigation.navigate("Profile", { food });
+                    navigation.navigate("Profile", {
+                        food,
+                        user
+                    });
                 }}
             />
 
@@ -130,17 +212,45 @@ const styles = StyleSheet.create({
         marginBottom: 10
     },
 
+    /* 
+    Agregado: contenedor del título e iconos
+    Permite alinear nombre + favoritos + carrito
+    */
+    headerContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        marginTop: 10,
+        gap: 10
+    },
+
     title: {
+        flex: 1,
         fontSize: 26,
         fontWeight: "bold",
-        marginTop: 10,
         color: colors.text
+    },
+
+    /* 
+    Agregado: botón circular para iconos
+    Hace que los iconos resalten visualmente
+    */
+    iconButton: {
+        backgroundColor: "#2563EB",
+        width: 46,
+        height: 46,
+        borderRadius: 23,
+        justifyContent: "center",
+        alignItems: "center",
+        shadowOpacity: 0.15,
+        shadowRadius: 4,
+        elevation: 4
     },
 
     price: {
         fontSize: 20,
         color: "#22c55e",
-        marginTop: 6,
+        marginTop: 10,
         fontWeight: "600"
     },
 
@@ -149,6 +259,52 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: colors.subtitle,
         marginBottom: 20
+    },
+
+    /* 
+    Agregado: sección del selector de cantidad
+    Diseño profesional para aumentar o disminuir productos
+    */
+    quantitySection: {
+        marginTop: 10,
+        marginBottom: 20
+    },
+
+    quantityTitle: {
+        fontSize: 18,
+        fontWeight: "bold",
+        color: colors.text,
+        marginBottom: 12
+    },
+
+    quantityContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "flex-start",
+        gap: 18
+    },
+
+    quantityButton: {
+        width: 45,
+        height: 45,
+        borderRadius: 12,
+        backgroundColor: "#2563EB",
+        justifyContent: "center",
+        alignItems: "center"
+    },
+
+    quantityButtonText: {
+        color: "white",
+        fontSize: 26,
+        fontWeight: "bold"
+    },
+
+    quantityText: {
+        fontSize: 22,
+        fontWeight: "bold",
+        color: colors.text,
+        minWidth: 30,
+        textAlign: "center"
     },
 
     ///Agregado: estilos para el título de ingredientes
