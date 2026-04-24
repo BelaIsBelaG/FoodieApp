@@ -13,10 +13,11 @@ import {
 export default function AIChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState("");
+
   const [messages, setMessages] = useState([
     {
       id: 1,
-      text: "Hola, soy tu asistente de FoodieApp. Puedo ayudarte con recomendaciones de comida, pedidos y sugerencias.",
+      text: "Hola, bienvenido a FoodieApp. Soy tu asistente virtual y estoy aquí para ayudarte con recomendaciones de comida, sugerencias personalizadas, pedidos, bebidas, promociones y todo lo relacionado con tu experiencia dentro de la aplicación. Cuéntame qué te gustaría pedir hoy.",
       sender: "bot",
     },
   ]);
@@ -24,55 +25,179 @@ export default function AIChatWidget() {
   const generarRespuestaIA = (textoUsuario) => {
     const texto = textoUsuario.toLowerCase().trim();
 
+    /*
+    SALUDOS
+    */
+    if (
+      texto.includes("hola") ||
+      texto.includes("buenas") ||
+      texto.includes("buen día") ||
+      texto.includes("buen dia") ||
+      texto.includes("hey")
+    ) {
+      return "Hola, bienvenido a FoodieApp. Soy tu asistente virtual y estoy aquí para ayudarte con recomendaciones de comida, sugerencias personalizadas, pedidos, bebidas, promociones y todo lo relacionado con tu experiencia dentro de la aplicación. Cuéntame qué te gustaría pedir hoy.";
+    }
+
+    /*
+    HAMBRE / QUÉ COMER
+    */
     if (
       texto.includes("hambre") ||
       texto.includes("qué comer") ||
-      texto.includes("que comer")
+      texto.includes("que comer") ||
+      texto.includes("recomiéndame comida") ||
+      texto.includes("recomienda comida")
     ) {
-      return "Si tienes mucha hambre, te recomiendo una hamburguesa con papas o una pizza personal. Son opciones rápidas y completas.";
+      return "Si tienes bastante hambre, te recomiendo una hamburguesa completa acompañada de papas especiales o una pizza personal con bebida. Son opciones muy completas, rápidas de preparar y bastante satisfactorias para una comida principal.";
     }
 
+    /*
+    DULCES / POSTRES
+    */
     if (
       texto.includes("dulce") ||
       texto.includes("postre") ||
-      texto.includes("antojo")
+      texto.includes("antojo") ||
+      texto.includes("algo dulce")
     ) {
-      return "Si buscas algo dulce, unas mini donitas con chocolate o un postre frío pueden ser una muy buena opción.";
+      return "Si tienes antojo de algo dulce, puedes elegir mini donitas con chocolate, brownies, helado o algún postre frío. Son excelentes opciones para acompañar tu pedido principal o simplemente para darte un gusto durante el día.";
     }
 
+    /*
+    COMIDA RÁPIDA
+    */
     if (
       texto.includes("rápido") ||
       texto.includes("rapido") ||
-      texto.includes("urgente")
+      texto.includes("urgente") ||
+      texto.includes("algo rápido") ||
+      texto.includes("comida rápida")
     ) {
-      return "Para algo rápido, puedes elegir perros calientes, papas especiales o una hamburguesa sencilla.";
+      return "Si buscas algo rápido y práctico, te recomiendo perros calientes, papas especiales, hamburguesas sencillas o una porción de pizza. Son productos con preparación rápida y perfectos cuando tienes poco tiempo.";
     }
 
+    /*
+    BEBIDAS
+    */
     if (
       texto.includes("bebida") ||
       texto.includes("tomar") ||
-      texto.includes("sed")
+      texto.includes("sed") ||
+      texto.includes("gaseosa") ||
+      texto.includes("jugo")
     ) {
-      return "Puedes acompañar tu pedido con gaseosa, té frío o una bebida más ligera según tu preferencia.";
+      return "Puedes acompañar tu pedido con gaseosa, jugos naturales, té frío, agua saborizada o bebidas más ligeras según tu preferencia. Elegir una buena bebida mejora mucho la experiencia de tu comida.";
     }
 
+    /*
+    COMIDA SALUDABLE
+    */
     if (
       texto.includes("saludable") ||
       texto.includes("liviano") ||
-      texto.includes("ligero")
+      texto.includes("ligero") ||
+      texto.includes("dieta") ||
+      texto.includes("fitness")
     ) {
-      return "Si prefieres algo más ligero, una ensalada o una opción con menos fritos sería ideal.";
+      return "Si prefieres una opción más saludable, ligera o balanceada, te recomiendo ensaladas frescas, opciones con menos fritos, proteínas a la plancha o acompañamientos más livianos. Así mantienes una buena alimentación sin dejar de disfrutar.";
     }
 
-    if (texto.includes("gracias")) {
-      return "Con gusto. Estoy aquí para ayudarte con tus pedidos y recomendaciones.";
+    /*
+    PIZZA
+    */
+    if (texto.includes("pizza")) {
+      return "La pizza siempre es una excelente opción cuando buscas algo delicioso y fácil de compartir. Puedes elegir una pizza personal si es solo para ti o una más grande si estás acompañado. Combina muy bien con bebidas frías y papas como acompañamiento.";
     }
 
-    if (texto.includes("hola") || texto.includes("buenas")) {
-      return "Hola. Cuéntame qué tipo de comida estás buscando hoy.";
+    /*
+    HAMBURGUESA
+    */
+    if (
+      texto.includes("hamburguesa") ||
+      texto.includes("burger")
+    ) {
+      return "Las hamburguesas son una de las opciones más populares dentro de FoodieApp. Puedes elegir desde una hamburguesa sencilla hasta una versión más completa con doble carne, queso extra, papas y bebida incluida para una experiencia más completa.";
     }
 
-    return "Puedo ayudarte con recomendaciones de comida, bebidas, antojos o sugerencias según lo que quieras pedir.";
+    /*
+    PAPAS
+    */
+    if (
+      texto.includes("papas") ||
+      texto.includes("papas fritas")
+    ) {
+      return "Las papas especiales son una excelente elección como acompañamiento o incluso como plato principal si buscas algo más informal. Puedes combinarlas con queso, salsas, carne o pollo según tu preferencia.";
+    }
+
+    /*
+    PERROS CALIENTES
+    */
+    if (
+      texto.includes("perro caliente") ||
+      texto.includes("hot dog") ||
+      texto.includes("perro")
+    ) {
+      return "Los perros calientes son ideales cuando buscas algo rápido, delicioso y económico. Puedes acompañarlos con papas, salsas especiales y una bebida fría para completar tu pedido.";
+    }
+
+    /*
+    FAVORITOS
+    */
+    if (
+      texto.includes("favoritos") ||
+      texto.includes("guardar comida")
+    ) {
+      return "Puedes guardar tus comidas favoritas presionando el ícono de corazón en la pantalla de detalles. Así podrás acceder más rápido a tus productos preferidos desde tu perfil sin tener que buscarlos nuevamente.";
+    }
+
+    /*
+    CARRITO
+    */
+    if (
+      texto.includes("carrito") ||
+      texto.includes("agregar al carrito") ||
+      texto.includes("comprar")
+    ) {
+      return "Para agregar productos al carrito, solo debes entrar al detalle de la comida y presionar el botón correspondiente. Desde tu perfil podrás revisar cantidades, aumentar o disminuir productos y continuar con el proceso de compra.";
+    }
+
+    /*
+    PERFIL
+    */
+    if (
+      texto.includes("perfil") ||
+      texto.includes("cuenta") ||
+      texto.includes("usuario")
+    ) {
+      return "Desde tu perfil puedes gestionar tu cuenta, cambiar tu foto de perfil, revisar tus favoritos, consultar tu carrito de compras y también cerrar sesión para volver al inicio de autenticación cuando lo necesites.";
+    }
+
+    /*
+    OFERTAS
+    */
+    if (
+      texto.includes("oferta") ||
+      texto.includes("promoción") ||
+      texto.includes("promocion") ||
+      texto.includes("descuento")
+    ) {
+      return "Las promociones suelen incluir combos especiales como hamburguesa con papas y bebida, descuentos en pizzas familiares o precios especiales en pedidos rápidos. Te recomiendo revisar frecuentemente la app para no perder ninguna oferta disponible.";
+    }
+
+    /*
+    AGRADECIMIENTO
+    */
+    if (
+      texto.includes("gracias") ||
+      texto.includes("muchas gracias")
+    ) {
+      return "Con mucho gusto. Estoy aquí para ayudarte a tener una mejor experiencia dentro de FoodieApp, resolver tus dudas y recomendarte las mejores opciones según lo que estés buscando.";
+    }
+
+    /*
+    RESPUESTA GENERAL
+    */
+    return "Puedo ayudarte con recomendaciones de comida, bebidas, postres, promociones, carrito de compras, favoritos, perfil de usuario y sugerencias personalizadas dentro de FoodieApp. Escríbeme qué estás buscando y con gusto te ayudaré.";
   };
 
   const handleSend = () => {
@@ -104,7 +229,9 @@ export default function AIChatWidget() {
           isUser ? styles.userMessage : styles.botMessage,
         ]}
       >
-        <Text style={styles.messageText}>{item.text}</Text>
+        <Text style={styles.messageText}>
+          {item.text}
+        </Text>
       </View>
     );
   };
@@ -116,7 +243,9 @@ export default function AIChatWidget() {
           style={styles.floatingButton}
           onPress={() => setIsOpen(true)}
         >
-          <Text style={styles.floatingButtonText}>IA</Text>
+          <Text style={styles.floatingButtonText}>
+            IA
+          </Text>
         </TouchableOpacity>
       )}
 
@@ -126,9 +255,16 @@ export default function AIChatWidget() {
           style={styles.chatContainer}
         >
           <View style={styles.header}>
-            <Text style={styles.headerTitle}>Asistente Foodie</Text>
-            <TouchableOpacity onPress={() => setIsOpen(false)}>
-              <Text style={styles.closeButton}>✕</Text>
+            <Text style={styles.headerTitle}>
+              Asistente Foodie
+            </Text>
+
+            <TouchableOpacity
+              onPress={() => setIsOpen(false)}
+            >
+              <Text style={styles.closeButton}>
+                ✕
+              </Text>
             </TouchableOpacity>
           </View>
 
@@ -147,8 +283,13 @@ export default function AIChatWidget() {
             style={styles.input}
           />
 
-          <TouchableOpacity style={styles.sendButton} onPress={handleSend}>
-            <Text style={styles.sendButtonText}>Enviar</Text>
+          <TouchableOpacity
+            style={styles.sendButton}
+            onPress={handleSend}
+          >
+            <Text style={styles.sendButtonText}>
+              Enviar
+            </Text>
           </TouchableOpacity>
         </KeyboardAvoidingView>
       )}
@@ -231,6 +372,7 @@ const styles = StyleSheet.create({
 
   messageText: {
     fontSize: 14,
+    color: "#0f172a",
   },
 
   input: {
