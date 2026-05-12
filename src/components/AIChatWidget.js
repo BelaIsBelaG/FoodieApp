@@ -141,6 +141,18 @@ export default function AIChatWidget() {
     }
 
     /*
+    SALCHIPAPAS
+    */
+    if (
+      texto.includes("salchipapas") ||
+      texto.includes("salchipapa") ||
+      texto.includes("salchicha") ||
+      texto.includes("papas")
+    ) {
+      return "Las salchipapas son una excelente opción cuando buscas algo delicioso y económico. Puedes acompañarlas con salsas especiales y una bebida fría para completar tu pedido.";
+    }
+
+    /*
     FAVORITOS
     */
     if (
