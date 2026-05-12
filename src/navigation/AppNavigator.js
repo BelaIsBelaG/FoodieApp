@@ -17,7 +17,7 @@ export default function AppNavigator() {
             <Stack.Navigator>
 
                 <Stack.Screen
-                name ="AuthScreen"
+                name ="Auth"
                 component={AuthScreen}
                 />
 
