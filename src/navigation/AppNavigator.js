@@ -6,6 +6,7 @@ import HomeScreen from "../screens/HomeScreen"
 import DetailsScreen from "../screens/DetailsScreen"
 import ProfileScreen from "../screens/ProfileScreen"
 import AuthScreen from "../screens/AuthScreen"
+import CheckoutScreen from "../screens/CheckoutScreen"
 
 const Stack = createNativeStackNavigator()
 
@@ -34,6 +35,11 @@ export default function AppNavigator() {
                 <Stack.Screen
                     name="Profile"
                     component={ProfileScreen}
+                />
+
+                <Stack.Screen
+                    name="Checkout"
+                    component={CheckoutScreen}
                 />
 
             </Stack.Navigator>
