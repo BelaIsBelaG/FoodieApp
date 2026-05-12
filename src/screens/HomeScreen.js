@@ -80,7 +80,8 @@ export default function HomeScreen({ navigation }) {
         "Perros calientes",
         "Pizza",
         "Papas",
-        "Bebidas"
+        "Bebidas",
+        "Salchipapas"
     ];
 
     const filteredFoods = useMemo(() => {
