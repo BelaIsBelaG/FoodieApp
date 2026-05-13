@@ -249,7 +249,7 @@ const styles = StyleSheet.create({
 
     price: {
         fontSize: 20,
-        color: "#000000",
+        color: "#22c55e",
         marginTop: 10,
         fontWeight: "600"
     },
