@@ -195,6 +195,111 @@ export const foods = [
         ]
     },
 
+    //Salchipapas
+    {
+        id: "16",
+        name: "Salchipapa clásica",
+        price: 18000,
+        image: "https://images.pexels.com/photos/15135086/pexels-photo-15135086.jpeg",
+        category: "Salchipapas",
+        description: "Salchipapa tradicional colombiana con papas crujientes y salchicha",
+        ingredients: [
+            "Papa francesa",
+            "Salchicha",
+            "Salsa rosada",
+            "Ketchup",
+            "Mostaza"
+        ]
+    },
+
+    {
+        id: "17",
+        name: "Salchipapa ranchera",
+        price: 24000,
+        image: "https://images.pexels.com/photos/14639252/pexels-photo-14639252.jpeg",
+        category: "Salchipapas",
+        description: "Salchipapa con salchicha ranchera, queso y maíz",
+        ingredients: [
+            "Papa francesa",
+            "Salchicha ranchera",
+            "Queso mozzarella",
+            "Maíz dulce",
+            "Salsa de ajo"
+        ]
+    },
+
+    {
+        id: "18",
+        name: "Salchipapa costeña",
+        price: 26000,
+        image: "https://www.elheraldo.co/resizer/v2/YKOKYH366FG77PIVJJG4ZRTF7M.png?auth=2b85c264db78c4a1b2e34fe304a640cb8c288ba0844a529499ca478c77f428b7&smart=true&quality=70&width=1200&height=675",
+        category: "Salchipapas",
+        description: "Salchipapa estilo costeño con carne desmechada y queso",
+        ingredients: [
+            "Papa criolla",
+            "Salchicha",
+            "Carne desmechada",
+            "Queso costeño",
+            "Salsa tártara",
+            "Lechuga fresca"
+        ]
+    },
+
+    {
+        id: "19",
+        name: "Salchipapa mixta",
+        price: 30000,
+        image: "https://images.pexels.com/photos/15135087/pexels-photo-15135087.jpeg",
+        category: "Salchipapas",
+        description: "Salchipapa con pollo, carne y variedad de salsas",
+        ingredients: [
+            "Papa francesa",
+            "Salchicha",
+            "Pollo desmechado",
+            "Carne de res",
+            "Queso cheddar",
+            "Salsas especiales"
+        ]
+    },
+
+    {
+        id: "20",
+        name: "Salchipapa paisa",
+        price: 28000,
+        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPvyc7b3L-NpGsCWNxGHRiP9bLn532knVNhw&s",
+        category: "Salchipapas",
+        description: "Salchipapa con chorizo, tocineta y huevo de codorniz",
+        ingredients: [
+            "Papa francesa",
+            "Salchicha",
+            "Chorizo",
+            "Tocineta",
+            "Huevos de codorniz",
+            "Salsa BBQ"
+        ]
+    },
+
+    {
+        id: "21",
+        name: "Salchipapa súper especial",
+        price: 35000,
+        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQq_J1Fsawgyhz2p1-LiZ_UGeIW5zvHldHXZA&s",
+        category: "Salchipapas",
+        description: "Salchipapa gigante con carnes, queso y vegetales",
+        ingredients: [
+            "Papa francesa",
+            "Salchicha",
+            "Pollo",
+            "Carne",
+            "Chorizo",
+            "Queso cheddar",
+            "Maíz",
+            "Lechuga",
+            "Tomate",
+            "Salsas especiales"
+        ]
+    },
+
     //Bebidas
     {
         id: "12",
@@ -227,6 +332,48 @@ export const foods = [
             "Naranjas frescas",
             "Hielo",
             "Azúcar opcional"
+        ]
+    },
+
+    {
+        id: "22",
+        name: "Gaseosa Colombiana",
+        price: 5000,
+        image: "https://mercaldas.vtexassets.com/arquivos/ids/1328830-800-auto?v=638550310078030000&width=800&height=auto&aspect=true",
+        category: "Bebidas",
+        description: "Gaseosa Colombiana bien fría",
+        ingredients: [
+            "Bebida gaseosa",
+            "Sabor kola",
+            "Hielo"
+        ]
+    },
+
+    {
+        id: "23",
+        name: "Kola roman",
+        price: 9000,
+        image: "https://esquirecolombia.com/wp-content/uploads/2025/12/foto-grande-AL-DIA_5-860x490.png",
+        category: "Bebidas",
+        description: "Refrescante Kola roman con sabor único",
+        ingredients: [
+            "Bebida gaseosa",
+            "Sabor kola",
+            "Hielo"
+        ]
+    },
+
+    {
+        id: "24",
+        name: "Gaseosa Postobón sabor uva",
+        price: 11000,
+        image: "https://megatiendas.vtexassets.com/arquivos/ids/176996/7702090029550.jpg?v=638937215645330000",
+        category: "Bebidas",
+        description: "Gaseosa Postobón sabor uva bien fría",
+        ingredients: [
+            "Bebida gaseosa",
+            "Sabor uva",
+            "Hielo"
         ]
     }
 
