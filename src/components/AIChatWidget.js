@@ -52,18 +52,6 @@ export default function AIChatWidget() {
     }
 
     /*
-    DULCES / POSTRES
-    */
-    if (
-      texto.includes("dulce") ||
-      texto.includes("postre") ||
-      texto.includes("antojo") ||
-      texto.includes("algo dulce")
-    ) {
-      return "Si tienes antojo de algo dulce, puedes elegir mini donitas con chocolate, brownies, helado o algún postre frío. Son excelentes opciones para acompañar tu pedido principal o simplemente para darte un gusto durante el día.";
-    }
-
-    /*
     COMIDA RÁPIDA
     */
     if (
