@@ -236,7 +236,7 @@ const styles = StyleSheet.create({
     Hace que los iconos resalten visualmente
     */
     iconButton: {
-        backgroundColor: "#2563EB",
+        backgroundColor: "#f97316",
         width: 46,
         height: 46,
         borderRadius: 23,
@@ -249,7 +249,7 @@ const styles = StyleSheet.create({
 
     price: {
         fontSize: 20,
-        color: "#22c55e",
+        color: "#000000",
         marginTop: 10,
         fontWeight: "600"
     },
@@ -288,7 +288,7 @@ const styles = StyleSheet.create({
         width: 45,
         height: 45,
         borderRadius: 12,
-        backgroundColor: "#2563EB",
+        backgroundColor: "#f97316",
         justifyContent: "center",
         alignItems: "center"
     },
@@ -333,7 +333,7 @@ const styles = StyleSheet.create({
 
     ///Agregado: botón favoritos
     favoriteButton: {
-        backgroundColor: "#1D4ED8",
+        backgroundColor: "#f97316",
         padding: 14,
         borderRadius: 12,
         alignItems: "center"
@@ -341,7 +341,7 @@ const styles = StyleSheet.create({
 
     ///Agregado: botón carrito
     cartButton: {
-        backgroundColor: "#16A34A",
+        backgroundColor: "#f97316",
         padding: 14,
         borderRadius: 12,
         alignItems: "center"
