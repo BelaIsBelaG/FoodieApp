@@ -8,7 +8,8 @@ import {
     Modal,
     ScrollView,
     TouchableOpacity,
-    Alert
+    Alert,
+    TextInput
 } from "react-native"
 
 import { CameraView, useCameraPermissions } from "expo-camera"
@@ -59,7 +60,11 @@ export default function ProfileScreen({ route, navigation }) {
         favorites,
         cart,
         increaseCartQuantity,
-        decreaseCartQuantity
+        decreaseCartQuantity,
+        removeFromCart,
+        clearCart,
+        getCartTotal,
+        getCartItemsCount
     } = useContext(FoodContext)
 
     //Referencia de la cámara
@@ -94,6 +99,14 @@ export default function ProfileScreen({ route, navigation }) {
 
     const displayEmail =
         user?.email || "foodieapp@test.com"
+
+    /*
+    Agregado:
+    Dirección editable del usuario
+    */
+    const [displayAddress, setDisplayAddress] = useState(
+        user?.address || "Cra 10 #20-30 Bogotá"
+    )
 
     //Función para tomar foto
     const takePhoto = async () => {
@@ -240,11 +253,51 @@ export default function ProfileScreen({ route, navigation }) {
                         </Text>
                     </View>
 
+                    {/* DIRECCIÓN DEL USUARIO */}
+                    <View style={styles.infoBlock}>
+
+                        <Text style={styles.label}>
+                            Dirección de entrega
+                        </Text>
+
+                        <TextInput
+                            style={styles.addressInput}
+                            placeholder="Escribe tu dirección"
+                            value={displayAddress}
+                            onChangeText={setDisplayAddress}
+                            multiline
+                        />
+
+                        <Text style={styles.addressHelper}>
+                            Puedes editar la dirección antes del checkout
+                        </Text>
+
+                    </View>
+
                     {/* Agregado: última comida vista */}
                     <View style={styles.infoBlock}>
                         <Text style={styles.label}>Última comida vista</Text>
                         <Text style={styles.food}>
                             {food?.name || "Sin información"}
+                        </Text>
+                    </View>
+
+                    {/* RESUMEN DEL CARRITO */}
+                    <View style={styles.infoBlock}>
+                        <Text style={styles.label}>
+                            Resumen del carrito
+                        </Text>
+
+                        <Text style={styles.userInfo}>
+                            Productos agregados:
+                            {" "}
+                            {getCartItemsCount()}
+                        </Text>
+
+                        <Text style={styles.totalPrice}>
+                            Total acumulado:
+                            {" "}
+                            ${getCartTotal()}
                         </Text>
                     </View>
 
@@ -264,7 +317,7 @@ export default function ProfileScreen({ route, navigation }) {
                                     }
                                 >
                                     <Text style={styles.userInfo}>
-                                        {item.name}
+                                        ❤️ {item.name}
                                     </Text>
                                 </TouchableOpacity>
                             ))
@@ -303,7 +356,13 @@ export default function ProfileScreen({ route, navigation }) {
                                     </Text>
 
                                     <Text style={styles.cartDetail}>
-                                        Total: ${item.price * item.quantity}
+                                        Precio unidad: ${item.price}
+                                    </Text>
+
+                                    <Text style={styles.cartTotal}>
+                                        Total producto:
+                                        {" "}
+                                        ${item.price * item.quantity}
                                     </Text>
 
                                     <View style={styles.quantityContainer}>
@@ -336,17 +395,33 @@ export default function ProfileScreen({ route, navigation }) {
 
                                     </View>
 
+                                    {/* BOTÓN COMPRAR SOLO ESTE PRODUCTO */}
                                     <TouchableOpacity
                                         style={styles.checkoutButton}
                                         onPress={() =>
-                                            Alert.alert(
-                                                "Comprar",
-                                                `Comprar ${item.name}`
+                                            navigation.navigate(
+                                                "Checkout",
+                                                {
+                                                    product: item,
+                                                    address: displayAddress
+                                                }
                                             )
                                         }
                                     >
                                         <Text style={styles.checkoutText}>
-                                            Checkout
+                                            Comprar ahora
+                                        </Text>
+                                    </TouchableOpacity>
+
+                                    {/* BOTÓN ELIMINAR PRODUCTO */}
+                                    <TouchableOpacity
+                                        style={styles.deleteButton}
+                                        onPress={() =>
+                                            removeFromCart(item.id)
+                                        }
+                                    >
+                                        <Text style={styles.deleteButtonText}>
+                                            Eliminar producto
                                         </Text>
                                     </TouchableOpacity>
 
@@ -358,6 +433,53 @@ export default function ProfileScreen({ route, navigation }) {
                             </Text>
                         )}
                     </View>
+
+                    {/* BOTÓN CHECKOUT GENERAL */}
+                    {cart.length > 0 && (
+                        <TouchableOpacity
+                            style={styles.generalCheckoutButton}
+                            onPress={() =>
+                                navigation.navigate(
+                                    "Checkout",
+                                    {
+                                        address: displayAddress
+                                    }
+                                )
+                            }
+                        >
+                            <Text style={styles.generalCheckoutText}>
+                                Proceder al pago total (${getCartTotal()})
+                            </Text>
+                        </TouchableOpacity>
+                    )}
+
+                    {/* BOTÓN VACIAR CARRITO */}
+                    {cart.length > 0 && (
+                        <TouchableOpacity
+                            style={styles.clearCartButton}
+                            onPress={() =>
+                                Alert.alert(
+                                    "Vaciar carrito",
+                                    "¿Deseas eliminar todos los productos?",
+                                    [
+                                        {
+                                            text: "Cancelar",
+                                            style: "cancel"
+                                        },
+                                        {
+                                            text: "Sí",
+                                            onPress: clearCart
+                                        }
+                                    ]
+                                )
+                            }
+                        >
+                            <Text style={styles.clearCartText}>
+                                Vaciar carrito
+                            </Text>
+                        </TouchableOpacity>
+                    )}
+
                     {/* BOTÓN CERRAR SESIÓN */}
                     <Pressable
                         style={styles.logoutButton}
@@ -475,7 +597,6 @@ export default function ProfileScreen({ route, navigation }) {
             </Modal>
 
         </View>
-
     )
 }
 
@@ -575,6 +696,29 @@ const styles = StyleSheet.create({
         fontWeight: "600"
     },
 
+    /*
+    Agregado:
+    Input editable para dirección
+    */
+    addressInput: {
+        backgroundColor: "#F8FAFC",
+        borderWidth: 1,
+        borderColor: "#CBD5E1",
+        borderRadius: 14,
+        padding: 14,
+        fontSize: 15,
+        color: "#0F172A",
+        marginTop: 8,
+        minHeight: 60,
+        textAlignVertical: "top"
+    },
+
+    addressHelper: {
+        marginTop: 8,
+        color: "#64748B",
+        fontSize: 13
+    },
+
     userInfo: {
         fontSize: 17,
         color: "#0F172A",
@@ -586,6 +730,13 @@ const styles = StyleSheet.create({
         fontSize: 17,
         color: "#16A34A",
         fontWeight: "700"
+    },
+
+    totalPrice: {
+        fontSize: 18,
+        color: "#16A34A",
+        fontWeight: "800",
+        marginTop: 10
     },
 
     favoriteCard: {
@@ -607,6 +758,13 @@ const styles = StyleSheet.create({
         fontSize: 15,
         color: "#475569",
         fontWeight: "500"
+    },
+
+    cartTotal: {
+        marginTop: 8,
+        fontSize: 16,
+        color: "#16A34A",
+        fontWeight: "800"
     },
 
     quantityContainer: {
@@ -639,13 +797,54 @@ const styles = StyleSheet.create({
 
     checkoutButton: {
         marginTop: 16,
-        backgroundColor: "#111827",
+        backgroundColor: "#132711",
         paddingVertical: 12,
         borderRadius: 12,
         alignItems: "center"
     },
 
     checkoutText: {
+        color: "white",
+        fontWeight: "700",
+        fontSize: 15
+    },
+
+    deleteButton: {
+        marginTop: 12,
+        backgroundColor: "#DC2626",
+        paddingVertical: 12,
+        borderRadius: 12,
+        alignItems: "center"
+    },
+
+    deleteButtonText: {
+        color: "white",
+        fontWeight: "700"
+    },
+
+    generalCheckoutButton: {
+        backgroundColor: "#16A34A",
+        paddingVertical: 18,
+        borderRadius: 16,
+        alignItems: "center",
+        marginTop: 20
+    },
+
+    generalCheckoutText: {
+        color: "white",
+        fontSize: 16,
+        fontWeight: "800"
+    },
+
+    clearCartButton: {
+        backgroundColor: "#475569",
+        paddingVertical: 16,
+        borderRadius: 14,
+        alignItems: "center",
+        marginTop: 14
+    },
+
+    clearCartText: {
         color: "white",
         fontWeight: "700",
         fontSize: 15
