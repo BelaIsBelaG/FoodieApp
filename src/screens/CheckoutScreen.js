@@ -1,4 +1,4 @@
-import React, { useContext } from "react"
+import React, { useContext, useState } from "react"
 
 import {
     View,
@@ -8,7 +8,8 @@ import {
     TouchableOpacity,
     Alert,
     Image,
-    ScrollView
+    ScrollView,
+    TextInput
 } from "react-native"
 
 import { FoodContext } from "../context/FoodContext"
@@ -22,12 +23,22 @@ export default function CheckoutScreen({ route, navigation }) {
     const singleProduct = route.params?.product
 
     /*
+    Dirección editable
+    */
+    const [address, setAddress] = useState(
+        route.params?.address ||
+        "Sin dirección registrada"
+    )
+
+    /*
     Obtenemos carrito y funciones globales
     */
     const {
         cart,
         clearCart,
-        getCartTotal
+        increaseCartQuantity,
+        decreaseCartQuantity,
+        removeFromCart
     } = useContext(FoodContext)
 
     /*
@@ -44,12 +55,11 @@ export default function CheckoutScreen({ route, navigation }) {
     /*
     Calculamos subtotal
     */
-    const subtotal = singleProduct
-
-        ? singleProduct.price *
-          singleProduct.quantity
-
-        : getCartTotal()
+    const subtotal = products.reduce(
+        (acc, item) =>
+            acc + (item.price * item.quantity),
+        0
+    )
 
     /*
     Valores extra simulados
@@ -67,21 +77,38 @@ export default function CheckoutScreen({ route, navigation }) {
     */
     const handlePayment = () => {
 
+        if (!address.trim()) {
+            Alert.alert(
+                "Dirección requerida",
+                "Por favor ingresa una dirección de entrega"
+            )
+            return
+        }
+
+        if (products.length === 0) {
+            Alert.alert(
+                "Carrito vacío",
+                "Agrega productos antes de pagar"
+            )
+            return
+        }
+
         Alert.alert(
             "Pago exitoso 🍔",
             "Tu pedido fue realizado correctamente",
             [
                 {
-                    text: "OK",
+                    text: "Ver detalle",
                     onPress: () => {
 
-                        /*
-                        Si es checkout general:
-                        vaciamos carrito
-                        */
                         if (!singleProduct) {
                             clearCart()
                         }
+
+                        Alert.alert(
+                            "Resumen del pedido 📦",
+                            `Dirección de entrega:\n${address}\n\nTotal pagado: $${total}`
+                        )
 
                         navigation.navigate("Home")
                     }
@@ -142,6 +169,49 @@ export default function CheckoutScreen({ route, navigation }) {
                                 ${item.price * item.quantity}
                             </Text>
 
+                            {/* CONTROLES DE CANTIDAD */}
+                            <View style={styles.quantityContainer}>
+
+                                <TouchableOpacity
+                                    style={styles.quantityButton}
+                                    onPress={() =>
+                                        decreaseCartQuantity(item.id)
+                                    }
+                                >
+                                    <Text style={styles.quantityButtonText}>
+                                        -
+                                    </Text>
+                                </TouchableOpacity>
+
+                                <Text style={styles.quantityText}>
+                                    {item.quantity}
+                                </Text>
+
+                                <TouchableOpacity
+                                    style={styles.quantityButton}
+                                    onPress={() =>
+                                        increaseCartQuantity(item.id)
+                                    }
+                                >
+                                    <Text style={styles.quantityButtonText}>
+                                        +
+                                    </Text>
+                                </TouchableOpacity>
+
+                            </View>
+
+                            {/* ELIMINAR PRODUCTO */}
+                            <TouchableOpacity
+                                style={styles.deleteButton}
+                                onPress={() =>
+                                    removeFromCart(item.id)
+                                }
+                            >
+                                <Text style={styles.deleteButtonText}>
+                                    🗑 Eliminar producto
+                                </Text>
+                            </TouchableOpacity>
+
                         </View>
 
                     </View>
@@ -156,48 +226,47 @@ export default function CheckoutScreen({ route, navigation }) {
                 </Text>
 
                 <View style={styles.summaryRow}>
-                    <Text style={styles.summaryText}>
-                        Subtotal
-                    </Text>
-
-                    <Text style={styles.summaryText}>
-                        ${subtotal}
-                    </Text>
+                    <Text style={styles.summaryText}>Subtotal</Text>
+                    <Text style={styles.summaryText}>${subtotal}</Text>
                 </View>
 
                 <View style={styles.summaryRow}>
-                    <Text style={styles.summaryText}>
-                        Domicilio
-                    </Text>
-
-                    <Text style={styles.summaryText}>
-                        ${domicilio}
-                    </Text>
+                    <Text style={styles.summaryText}>Domicilio</Text>
+                    <Text style={styles.summaryText}>${domicilio}</Text>
                 </View>
 
                 <View style={styles.summaryRow}>
-                    <Text style={styles.summaryText}>
-                        Impuestos
-                    </Text>
-
-                    <Text style={styles.summaryText}>
-                        ${impuesto}
-                    </Text>
+                    <Text style={styles.summaryText}>Impuestos</Text>
+                    <Text style={styles.summaryText}>${impuesto}</Text>
                 </View>
 
                 <View style={styles.separator} />
 
                 <View style={styles.summaryRow}>
-
-                    <Text style={styles.totalTitle}>
-                        Total
-                    </Text>
-
-                    <Text style={styles.totalPrice}>
-                        ${total}
-                    </Text>
-
+                    <Text style={styles.totalTitle}>Total</Text>
+                    <Text style={styles.totalPrice}>${total}</Text>
                 </View>
+
+            </View>
+
+            {/* DIRECCIÓN */}
+            <View style={styles.addressCard}>
+
+                <Text style={styles.summaryTitle}>
+                    Dirección de entrega
+                </Text>
+
+                <TextInput
+                    style={styles.addressInput}
+                    value={address}
+                    onChangeText={setAddress}
+                    placeholder="Ingresa dirección de entrega"
+                    multiline
+                />
+
+                <Text style={styles.addressHelper}>
+                    Puedes modificar la dirección antes de confirmar el pedido
+                </Text>
 
             </View>
 
@@ -209,27 +278,19 @@ export default function CheckoutScreen({ route, navigation }) {
                 </Text>
 
                 <View style={styles.paymentOption}>
-                    <Text style={styles.paymentText}>
-                        💳 Tarjeta débito/crédito
-                    </Text>
+                    <Text style={styles.paymentText}>💳 Tarjeta débito/crédito</Text>
                 </View>
 
                 <View style={styles.paymentOption}>
-                    <Text style={styles.paymentText}>
-                        📱 Nequi
-                    </Text>
+                    <Text style={styles.paymentText}>📱 Nequi</Text>
                 </View>
 
                 <View style={styles.paymentOption}>
-                    <Text style={styles.paymentText}>
-                        🏦 Daviplata
-                    </Text>
+                    <Text style={styles.paymentText}>🏦 Daviplata</Text>
                 </View>
 
                 <View style={styles.paymentOption}>
-                    <Text style={styles.paymentText}>
-                        💵 Pago contra entrega
-                    </Text>
+                    <Text style={styles.paymentText}>💵 Pago contra entrega</Text>
                 </View>
 
             </View>
@@ -326,6 +387,47 @@ const styles = StyleSheet.create({
         color: "#16A34A"
     },
 
+    quantityContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        marginTop: 14,
+        gap: 16
+    },
+
+    quantityButton: {
+        width: 38,
+        height: 38,
+        borderRadius: 10,
+        backgroundColor: "#2563EB",
+        justifyContent: "center",
+        alignItems: "center"
+    },
+
+    quantityButtonText: {
+        color: "#fff",
+        fontSize: 20,
+        fontWeight: "800"
+    },
+
+    quantityText: {
+        fontSize: 18,
+        fontWeight: "800",
+        color: "#0F172A"
+    },
+
+    deleteButton: {
+        marginTop: 14,
+        backgroundColor: "#DC2626",
+        paddingVertical: 10,
+        borderRadius: 12,
+        alignItems: "center"
+    },
+
+    deleteButtonText: {
+        color: "#fff",
+        fontWeight: "700"
+    },
+
     summaryCard: {
         backgroundColor: "#FFFFFF",
         borderRadius: 18,
@@ -369,6 +471,31 @@ const styles = StyleSheet.create({
         color: "#16A34A"
     },
 
+    addressCard: {
+        backgroundColor: "#FFFFFF",
+        borderRadius: 18,
+        padding: 20,
+        marginTop: 20
+    },
+
+    addressInput: {
+        backgroundColor: "#F8FAFC",
+        borderWidth: 1,
+        borderColor: "#CBD5E1",
+        borderRadius: 14,
+        padding: 14,
+        fontSize: 15,
+        color: "#0F172A",
+        minHeight: 70,
+        textAlignVertical: "top"
+    },
+
+    addressHelper: {
+        marginTop: 8,
+        color: "#64748B",
+        fontSize: 13
+    },
+
     paymentCard: {
         backgroundColor: "#FFFFFF",
         borderRadius: 18,
@@ -398,7 +525,7 @@ const styles = StyleSheet.create({
     },
 
     payButtonText: {
-        color: "#FFFFFF",
+        color: "#fff",
         fontSize: 17,
         fontWeight: "800"
     },
@@ -413,7 +540,7 @@ const styles = StyleSheet.create({
     },
 
     backButtonText: {
-        color: "#FFFFFF",
+        color: "#fff",
         fontSize: 16,
         fontWeight: "700"
     }
