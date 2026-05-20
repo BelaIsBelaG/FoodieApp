@@ -173,8 +173,8 @@ Agregar capturas de pantalla del historial de commits realizados por cada integr
 
 Ejemplo:
 
-Integrante | Evidencia
-------------|------------
+Integrante  
+------------
 Anyeli Tatiana Angulo Paz 
 Ingrid Yuliana Cortes 
 Isabela Carabalí 
